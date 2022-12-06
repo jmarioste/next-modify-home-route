@@ -1,9 +1,12 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
-const HomePage: NextPage = () => {
+type Props = {
+  testData: string;
+};
+const TestIndexPage: NextPage<Props> = (props) => {
   const { data } = useSession();
   return (
     <div className="container">
@@ -13,7 +16,7 @@ const HomePage: NextPage = () => {
           <Link className="btn " href="/admin">
             Go to Admin
           </Link>
-
+          <div>{props.testData}</div>
           {!!data?.user ? (
             <>
               <h2>You are logged in as {data?.user?.email} </h2>
@@ -33,4 +36,12 @@ const HomePage: NextPage = () => {
   );
 };
 
-export default HomePage;
+export default TestIndexPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return {
+    props: {
+      testData: "This is a test data",
+    },
+  };
+};
