@@ -1,29 +1,10 @@
-import { stackMiddlewares } from 'middlewares/stackMiddlewares'
-import { withAuthorization } from 'middlewares/withAuthorization'
-import { withRedirect } from 'middlewares/withRedirect'
-import { withRedirectToHomePage } from 'middlewares/withRedirectToHomePage'
-import { withSecurityHeaders } from 'middlewares/withSecurityHeaders'
-import { withGraphqlHeader } from 'middlewares/withGraphqlHeader'
-import { withIpCookie } from 'middlewares/withIpCookie'
+import { NextRequest, NextResponse } from "next/server";
 
-const middlewares = [
-  withRedirect,
-  withRedirectToHomePage,
-  withSecurityHeaders,
-  withGraphqlHeader,
-  withIpCookie,
-  withAuthorization
-]
-
-export default stackMiddlewares(middlewares)
-
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|favicon.ico).*)'
-  ]
+export async function middleware(req: NextRequest) {
+  const { pathname, origin } = req.nextUrl;
+  if (pathname.startsWith("/index/index")) {
+    return NextResponse.rewrite(new URL("/my-index", origin));
+  }
+  console.log("middleware", pathname, req.url);
+  return NextResponse.next();
 }

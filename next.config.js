@@ -2,18 +2,30 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  async rewrites(){
+  async redirects() {
     return [
       {
-        source: "/",
-        destination: "/home"
+        source: "/home",
+        destination: "/",
+        statusCode: 301,
       },
       {
-        source: "/index",
-        destination: "/test-index"
-      }
-    ]
-  }
-}
+        source: "/my-index",
+        destination: "/index",
+        statusCode: 301,
+      },
+    ];
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          destination: "/home",
+        },
+      ],
+    };
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
